@@ -1,0 +1,32 @@
+from google import genai
+import time 
+
+# 1. Inicia o cliente puxando a chave do seu terminal
+client = genai.Client()
+
+# 2. Cria a sessão de chat (MUDANÇA AQUI: trocamos para o 1.5-flash)
+chat = client.chats.create(model="gemini-2.5-flash-lite")
+
+print("=========================================================")
+print(" Chat com Gemini Iniciado! (Digite 'sair' para encerrar) ")
+print("=========================================================")
+
+# 3. O loop infinito
+while True:
+    mensagem = input("\nVocê: ")
+    
+    # Trava de saída
+    if mensagem.lower() == 'sair':
+        print("\nDesligando... Valeu, Cabeça Oca!")
+        break
+        
+    # O "Airbag" contra servidores lotados
+    try:
+        resposta = chat.send_message(mensagem)
+        print(f"Gemini: {resposta.text}")
+        
+    except Exception as erro:
+        print(f"\n[Aviso do Sistema] Os servidores do Google estão engarrafados agora!")
+        print(f"-> Motivo técnico: {erro}")
+        print("Esperando 5 segundos para a fila andar e tentar de novo...")
+        time.sleep(5)
